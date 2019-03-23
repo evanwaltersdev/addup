@@ -25,14 +25,16 @@
                     
                 </div>
             
-
+@if($users['discord_nick'] == '')
+<h2>This user does not exist</h2>
+@else
             <div class="content">
+                <h2>Add me on Discord™</h2>
                 <div class="title m-b-md">
-                    sharing discord tags is a pain. <br>
-                    addup makes it easy.
+                    {{ $users['discord_nick'] }}
                     
-</div> 
-<a href="/login/discord">
+</div>
+<input type="hidden" value="{{ $users['discord_nick'] }}" id="myInput"> 
 <button class="btn" data-clipboard-target="#myInput">
   <span class="dot"></span>
   <span class="dot"></span>
@@ -42,9 +44,9 @@
   <span class="dot"></span>
   <span class="dot"></span>
   <span class="dot"></span>
-  <span class="text" id="button1">Get started</span>
+  <span class="text" id="button1">Copy to clipboard</span>
 </button>
-</a>
+@endif
  
 
                 

@@ -4,29 +4,45 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Socialite;
+use App\User;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
 
     use AuthenticatesUsers;
+  
+    
+    /**
+     * Redirect the user to the Discord authentication page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function redirectToProvider()
+    {
+        return Socialite::driver('discord')->redirect();
+    }
 
     /**
-     * Where to redirect users after login.
+     * Obtain the user information from Discord.
      *
-     * @var string
+     * @return \Illuminate\Http\Response
      */
-    protected $redirectTo = '/home';
+    public function handleProviderCallback()
+    {
+        $discordUser = Socialite::driver('discord')->user();
 
+
+        $user = User::firstOrCreate([
+            'email' => $discordUser->email,
+            'discord_id' => $discordUser->id,
+            'discord_nick' => $discordUser->nickname,
+            'discord_avatar' => $discordUser->avatar,
+        ]);
+
+        return redirect()->route('user', ['id' => $user->id]);
+
+    }
     /**
      * Create a new controller instance.
      *

@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes(['register' => false]);
+
+Route::get('login/discord/', 'Auth\LoginController@redirectToProvider');
+Route::get('login/discord/callback', 'Auth\LoginController@handleProviderCallback');
+
+
+Route::get('user/{id}', 'UserController@user')->name('user');
